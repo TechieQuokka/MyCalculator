@@ -33,6 +33,7 @@ namespace ShuntingYardCalculator
             if (this.HasInvalidCharacters(expression, this.ERROR_STRING)) throw new ArgumentException("The expression contains invalid characters.");
             if (!this.ParenthesesValidation(expression)) throw new InvalidOperationException("Cannot process expression due to mismatched parentheses.");
             if (Regex.IsMatch(expression, "---")) throw new InvalidOperationException("The operation is not allowed when the input contains consecutive '-' characters.");
+            if (!this.CheckParenthesisRules(expression)) throw new FormatException("Invalid expression format: Parentheses are not allowed immediately after a digit.");
 
             expression = this.NormalizeExpression(expression);
             expression = this.AdjustExpression(expression);
@@ -50,6 +51,7 @@ namespace ShuntingYardCalculator
             if (this.HasInvalidCharacters(expression, this.ERROR_STRING)) throw new ArgumentException("The expression contains invalid characters.");
             if (!this.ParenthesesValidation(expression)) throw new InvalidOperationException("Cannot process expression due to mismatched parentheses.");
             if (Regex.IsMatch(expression, "---")) throw new InvalidOperationException("The operation is not allowed when the input contains consecutive '-' characters.");
+            if (!this.CheckParenthesisRules(expression)) throw new FormatException("Invalid expression format: Parentheses are not allowed immediately after a digit.");
 
             return this.GenerateTransformedArrayRecursive(expression);
         }
@@ -450,6 +452,16 @@ namespace ShuntingYardCalculator
                 builder.Append(element);
             }
             yield return builder.ToString();
+        }
+
+        private bool CheckParenthesisRules(string expression)
+        {
+            for (int index = 1; index < expression.Length; index++)
+            {
+                char character = expression[index];
+                if (character == '(' && char.IsDigit(expression[index - 1])) return false;
+            }
+            return true;
         }
 
         public void AddCustomStringHandler(ICalculator.CustomStringHandler handler)

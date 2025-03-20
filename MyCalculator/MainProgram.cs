@@ -21,6 +21,9 @@ namespace MyCalculator
                 return value;
             });
 
+            Console.WriteLine(calculator.Compute("30+-4*(10)"));
+            return;
+
             string expression = "(10 + 20) * cal (10 + 20) + [100, 200, func (func(cal(10 + 11)))] + cal (1 + 2 + 3) * [99, 98, 97]";
             //expression = "cal (10 + 20)";
             Console.WriteLine(expression);
